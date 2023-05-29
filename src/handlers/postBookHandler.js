@@ -1,8 +1,17 @@
-const { nanoid } = require("nanoid")
-const books = require("../books")
+const { nanoid } = require('nanoid')
+const books = require('../books')
 
 const postBookHandler = (request, h) => {
-  const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+  } = request.payload
   const id = nanoid(16)
   const finished = readPage === pageCount
   const insertedAt = new Date().toISOString()
@@ -27,7 +36,7 @@ const postBookHandler = (request, h) => {
   if (!name) {
     const responseBody = {
       status: 'fail',
-      message: 'Gagal menambahkan buku. Mohon isi nama buku'
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
     }
 
     const response = h.response(responseBody)
@@ -39,7 +48,7 @@ const postBookHandler = (request, h) => {
   if (readPage > pageCount) {
     const responseBody = {
       status: 'fail',
-      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount'
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
     }
 
     const response = h.response(responseBody)
@@ -55,7 +64,7 @@ const postBookHandler = (request, h) => {
   if (!isSuccess) {
     const responseBody = {
       status: 'fail',
-      message: 'Buku gagal ditambahkan'
+      message: 'Buku gagal ditambahkan',
     }
 
     const response = h.response(responseBody)
@@ -69,7 +78,7 @@ const postBookHandler = (request, h) => {
     message: 'Buku berhasil ditambahkan',
     data: {
       bookId: id,
-    }
+    },
   }
 
   const response = h.response(responseBody)

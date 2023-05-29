@@ -1,4 +1,4 @@
-const books = require("../books")
+const books = require('../books')
 
 const putBookHandler = (request, h) => {
   const { bookId } = request.params
@@ -9,7 +9,7 @@ const putBookHandler = (request, h) => {
   if (index === -1) {
     const responseBody = {
       status: 'fail',
-      message: 'Gagal memperbarui buku. Id tidak ditemukan'
+      message: 'Gagal memperbarui buku. Id tidak ditemukan',
     }
 
     const response = h.response(responseBody)
@@ -17,9 +17,17 @@ const putBookHandler = (request, h) => {
     return response
   }
 
-
   // setup data for book update
-  const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload
+  const {
+    name,
+    year,
+    author,
+    summary,
+    publisher,
+    pageCount,
+    readPage,
+    reading,
+  } = request.payload
   const finished = readPage === pageCount
   const updatedAt = new Date().toISOString()
 
@@ -27,7 +35,7 @@ const putBookHandler = (request, h) => {
   if (!name) {
     const responseBody = {
       status: 'fail',
-      message: 'Gagal memperbarui buku. Mohon isi nama buku'
+      message: 'Gagal memperbarui buku. Mohon isi nama buku',
     }
 
     const response = h.response(responseBody)
@@ -39,7 +47,7 @@ const putBookHandler = (request, h) => {
   if (readPage > pageCount) {
     const responseBody = {
       status: 'fail',
-      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount'
+      message: 'Gagal memperbarui buku. readPage tidak boleh lebih besar dari pageCount',
     }
 
     const response = h.response(responseBody)
@@ -59,13 +67,13 @@ const putBookHandler = (request, h) => {
     readPage,
     finished,
     reading,
-    updatedAt
+    updatedAt,
   }
 
   // return success response
   const responseBody = {
     status: 'success',
-    message: 'Buku berhasil diperbarui'
+    message: 'Buku berhasil diperbarui',
   }
 
   const response = h.response(responseBody)

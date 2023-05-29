@@ -1,4 +1,4 @@
-const books = require("../books")
+const books = require('../books')
 
 const deleteBookHandler = (request, h) => {
   const { bookId } = request.params
@@ -9,7 +9,7 @@ const deleteBookHandler = (request, h) => {
   if (index === -1) {
     const responseBody = {
       status: 'fail',
-      message: 'Buku gagal dihapus. Id tidak ditemukan'
+      message: 'Buku gagal dihapus. Id tidak ditemukan',
     }
 
     const response = h.response(responseBody)
@@ -23,7 +23,7 @@ const deleteBookHandler = (request, h) => {
   // return success response
   const responseBody = {
     status: 'success',
-    message: 'Buku berhasil dihapus'
+    message: 'Buku berhasil dihapus',
   }
 
   const response = h.response(responseBody)
