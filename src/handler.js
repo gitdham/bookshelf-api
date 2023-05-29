@@ -1,6 +1,7 @@
 const { nanoid } = require("nanoid")
 const books = require("./books")
 
+
 // POST new book route handler
 const addBookHandler = (request, h) => {
   const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload
@@ -48,6 +49,7 @@ const addBookHandler = (request, h) => {
     return response
   }
 
+  // insert new book to books list
   books.push(newBook)
   const isSuccess = books.filter((book) => book.id === id).length > 0
 
@@ -77,65 +79,44 @@ const addBookHandler = (request, h) => {
   return response
 }
 
+
 // GET all books route handler
 const getAllBooksHandler = (request, h) => {
-  const { name, reading, finished } = request.query
+  const { name = '', reading = '', finished = '' } = request.query
 
-  // Filter books by name if name query parameter exist
-  if (name) {
-    const filteredBooks = books.filter((book) => book.name.toLowerCase().includes(name.toLowerCase()))
-      .map((book) => ({ id: book.id, name: book.name, publisher: book.publisher }))
+  // filtering and mutating books data
+  const indexBooks = books
+    .filter((book) => {
+      // if name not empty filter books by name
+      if (name !== '') return book.name.toLowerCase().includes(name.toLowerCase())
+      else return book
+    })
+    .filter((book) => {
+      // if reading is 1 or 0 filter books by reading status
+      if (reading === '1' || reading === '0')
+        return (reading === '1' && book.reading) || (reading === '0' && !book.reading)
+      else return book
+    })
+    .filter((book) => {
+      // if finished is 1 or 0 filter books by finished status
+      if (finished === '1' || finished === '0')
+        return (finished === '1' && book.finished) || (finished === '0' && !book.finished)
+      else return book
+    })
+    .map((book) => ({ id: book.id, name: book.name, publisher: book.publisher }))
 
-    const responseBody = {
-      status: 'success',
-      data: { books: filteredBooks }
-    }
-
-    const response = h.response(responseBody)
-    return response
-  }
-
-  // Filter books by reading state if reading query parameter exist
-  if (reading) {
-    const readingState = Boolean(Number(reading))
-    const filteredBooks = books.filter((book) => book.reading === readingState)
-      .map((book) => ({ id: book.id, name: book.name, publisher: book.publisher }))
-
-    const responseBody = {
-      status: 'success',
-      data: { books: filteredBooks }
-    }
-
-    const response = h.response(responseBody)
-    return response
-  }
-
-  // Filter books by finished state if finished query parameter exist
-  if (finished) {
-    const finishedgState = Boolean(Number(finished))
-    const filteredBooks = books.filter((book) => book.finished === finishedgState)
-      .map((book) => ({ id: book.id, name: book.name, publisher: book.publisher }))
-
-    const responseBody = {
-      status: 'success',
-      data: { books: filteredBooks }
-    }
-
-    const response = h.response(responseBody)
-    return response
-  }
-
-  // Default return of all books
+  // Return response books data
   const responseBody = {
     status: 'success',
     data: {
-      books: books.map((book) => ({ id: book.id, name: book.name, publisher: book.publisher }))
+      books: indexBooks
     }
   }
 
   const response = h.response(responseBody)
   return response
 }
+
 
 // GET selected book by bookId
 const getBookByIdHandler = (request, h) => {
@@ -165,6 +146,7 @@ const getBookByIdHandler = (request, h) => {
   return response
 }
 
+
 // PUT selected book by bookId
 const editBookByIdHandler = (request, h) => {
   const { bookId } = request.params
@@ -182,6 +164,7 @@ const editBookByIdHandler = (request, h) => {
     response.code(404)
     return response
   }
+
 
   // setup data for book update
   const { name, year, author, summary, publisher, pageCount, readPage, reading } = request.payload
@@ -237,6 +220,7 @@ const editBookByIdHandler = (request, h) => {
   response.code(200)
   return response
 }
+
 
 // DELETE selected book by bookId
 const deleteBookByIdHandler = (request, h) => {
